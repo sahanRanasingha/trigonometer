@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigonometry Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Link to the favicon -->
+    <link rel="icon" type="image/png" href="trigonometry.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .input-group-text {
+            font-size: 1.2rem;
+        }
+        .toast-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1050;
+        }
+        footer {
+            background: #343a40;
+            color: white;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+        }
+        .description {
+            margin-top: 20px;
+            text-align: left; 
+            font-size: 16px;
+            color: #333;
+            max-width: 800px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container mt-5">
+        <h2 class="mb-3">Trigonometry Calculator</h2>
+        <div class="mb-3 d-flex">
+            <select id="operation" class="form-select me-2">
+                <option value="sin">sin</option>
+                <option value="cos">cos</option>
+                <option value="tan">tan</option>
+                <option value="sec">sec</option>
+                <option value="cosec">cosec</option>
+                <option value="cot">cot</option>
+            </select>
+            <input type="number" id="angle" class="form-control me-2" placeholder="Enter angle">
+            <button class="btn btn-primary" onclick="calculate()">Calculate</button>
+        </div>
+        <p class="result mt-3" id="result"></p>
+    </div>
+    
+    <div class="container">
+        <h2 class="mb-3">Inverse Trigonometry Calculator</h2>
+        <div class="mb-3 d-flex">
+            <select id="inverseOperation" class="form-select me-2">
+                <option value="asin">sin⁻¹</option>
+                <option value="acos">cos⁻¹</option>
+                <option value="atan">tan⁻¹</option>
+                <option value="acot">cot⁻¹</option>
+                <option value="asec">sec⁻¹</option>
+                <option value="acosec">cosec⁻¹</option>
+            </select>
+            <input type="number" id="inverseAngle" class="form-control me-2" placeholder="Enter value">
+            <button class="btn btn-primary" onclick="calculateInverse()">Calculate</button>
+        </div>
+        <p class="result mt-3" id="inverseResult"></p>
+    </div>
+
+    <script>
+        function showToast(message, type = 'danger') {
+            let toastContainer = document.getElementById("toastContainer");
+            let toast = document.createElement("div");
+            let bgColor = type === 'success' ? 'bg-success' : 'bg-danger';
+            toast.className = `toast align-items-center text-white ${bgColor} border-0 show`;
+            toast.role = "alert";
+            toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+            toastContainer.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+        
+        function calculate() {
+            let angle = document.getElementById('angle').value;
+            if (angle === "") {
+                showToast("Please enter an angle value.");
+                return;
+            }
+            let func = document.getElementById('operation').value;
+            let radians = parseFloat(angle) * (Math.PI / 180);
+            let result;
+
+            switch (func) {
+                case 'sin': result = Math.sin(radians); break;
+                case 'cos': result = Math.cos(radians); break;
+                case 'tan': result = Math.tan(radians); break;
+                case 'sec': result = 1 / Math.cos(radians); break;
+                case 'cosec': result = 1 / Math.sin(radians); break;
+                case 'cot': result = 1 / Math.tan(radians); break;
+                default: result = "Invalid operation";
+            }
+
+            document.getElementById('result').innerText = `Result: ${result.toFixed(6)}`;
+            showToast("Calculation successful!", 'success');
+        }
+
+        function calculateInverse() {
+            let value = document.getElementById('inverseAngle').value;
+            if (value === "") {
+                showToast("Please enter a value.");
+                return;
+            }
+            let func = document.getElementById('inverseOperation').value;
+            let result;
+
+            switch (func) {
+                case 'asin': result = Math.asin(parseFloat(value)) * (180 / Math.PI); break;
+                case 'acos': result = Math.acos(parseFloat(value)) * (180 / Math.PI); break;
+                case 'atan': result = Math.atan(parseFloat(value)) * (180 / Math.PI); break;
+                case 'acot': result = (Math.PI / 2 - Math.atan(parseFloat(value))) * (180 / Math.PI); break;
+                case 'asec': result = Math.acos(1 / parseFloat(value)) * (180 / Math.PI); break;
+                case 'acosec': result = Math.asin(1 / parseFloat(value)) * (180 / Math.PI); break;
+                default: result = "Invalid operation";
+            }
+
+            document.getElementById('inverseResult').innerText = `Result: ${result.toFixed(6)}`;
+            showToast("Calculation successful!", 'success');
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Trigonometry Calculator | Developed by Sahan Ranasingha</p>
+    </footer>
+
+    <!-- Description at the bottom -->
+    <div class="description">
+        <p>This Trigonometry Calculator allows you to compute the values of various trigonometric functions and their inverses for a given input. Whether you're working with standard trigonometric operations or their inverse counterparts, this tool is designed to simplify your calculations and help you better understand trigonometric relationships.</p>
+
+        <h5>How to use the Trigonometry Calculator:</h5>
+        <p>1. Select a trigonometric function (sin, cos, tan, sec, cosec, or cot) from the dropdown menu.</p>
+        <p>2. Enter the angle in degrees in the input box next to the selected function.</p>
+        <p>3. Click the <strong>Calculate</strong> button to see the result of the calculation.</p>
+        <p>For example, if you select "sin" and enter an angle of 30°, the calculator will compute the sine value for 30° and display it.</p>
+
+        <h5>How to use the Inverse Trigonometry Calculator:</h5>
+        <p>1. Select an inverse trigonometric function (sin⁻¹, cos⁻¹, tan⁻¹, etc.) from the dropdown menu.</p>
+        <p>2. Enter the value for which you want to find the angle.</p>
+        <p>3. Click the <strong>Calculate</strong> button to determine the angle corresponding to the selected inverse function.</p>
+        <p>For example, if you select "sin⁻¹" and enter a value of 0.5, the calculator will compute the angle whose sine is 0.5, and the result will be displayed in degrees.</p>
+
+        <h5>Result Display:</h5>
+        <p>Results are displayed with six decimal places to ensure accuracy, which is particularly useful for scientific calculations.</p>
+        <p>For inverse functions, the result is displayed in degrees. The calculation for each function is based on the standard trigonometric formulas, and the values are calculated using the angle in radians.</p>
+
+        <h5>Important Notes:</h5>
+        <ul>
+            <li>Ensure that the angle you provide is in degrees, as the calculator works with degree measurements.</li>
+            <li>The calculator uses mathematical constants such as Pi (π) for accurate trigonometric results.</li>
+            <li>If you input a value that exceeds the range for certain inverse functions (e.g., sin⁻¹ for values outside of -1 to 1), the result may be undefined or error-prone.</li>
+            <li>If an input field is left empty, the calculator will prompt you to provide a value before performing the calculation.</li>
+        </ul>
+
+        <h5>About Trigonometry:</h5>
+        <p>Trigonometry is a branch of mathematics that studies the relationships between the angles and sides of triangles. It is widely used in fields such as physics, engineering, and astronomy. In trigonometry, the basic functions include sine, cosine, tangent, and their reciprocal functions: secant, cosecant, and cotangent. Inverse trigonometric functions help to find angles when the values of the trigonometric functions are known.</p>
+
+        <p>We hope this calculator makes working with trigonometric calculations easier and more efficient!</p>
+    </div>
+</body>
+</html>
